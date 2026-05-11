@@ -106,13 +106,11 @@ document.querySelectorAll('.js-delete-link')
       const container = document.querySelector(`.js-cart-item-container-${productId}`);
       container.remove();
 
-      updateCartQuantity();
+      const cartQuantity = calculateCartQuantity();
+      document.querySelector('.js-return-to-home-link')
+        .innerHTML = `${cartQuantity} items`;
     });
   });
-
-const cartQuantity = calculateCartQuantity();
-document.querySelector('.js-return-to-home-link')
-  .innerHTML = `${cartQuantity} items`;
 
 document.querySelectorAll('.js-update-link')
   .forEach((link) => {
