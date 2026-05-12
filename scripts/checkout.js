@@ -1,8 +1,10 @@
-import { cart, removeFromCart, calculateCartQuantity } from '../data/cart.js';
+import { cart, removeFromCart, calculateCartQuantity, updateQuantity } from '../data/cart.js';
 import { products } from '../data/products.js';
 import { formatCurrency } from './utils/money.js';
 
 let cartSummaryHTML = '';
+
+renderCheckoutItem();
 
 cart.forEach((cartItem) => {
   const { productId } = cartItem;
@@ -40,7 +42,13 @@ cart.forEach((cartItem) => {
               data-product-id="${matchingProduct.id}">
               Update
             </span>
-            <span class="delete-quantity-link link-primary js-delete-link" data-product-id="${matchingProduct.id}">
+            <input class="quantity-input js-quantity-input-${matchingProduct.id}">
+            <span class="save-quantity-link link-primary js-save-link"
+              data-product-id="${matchingProduct.id}">
+              Save
+            </span>
+            <span class="delete-quantity-link link-primary js-delete-link"
+              data-product-id="${matchingProduct.id}">
               Delete
             </span>
           </div>
@@ -116,6 +124,34 @@ document.querySelectorAll('.js-update-link')
   .forEach((link) => {
     link.addEventListener('click', () => {
       const { productId } = link.dataset;
-      console.log(productId);
+      
+      const container = document.querySelector(`.js-cart-item-container-${productId}`);
+      container.classList.add('is-editing-quantity');
     });
   });
+
+document.querySelectorAll('.js-save-link')
+  .forEach((link) => {
+    link.addEventListener('click', () => {
+      const { productId } = link.dataset;
+
+      const container = document.querySelector(`.js-cart-item-container-${productId}`);
+      container.classList.remove('js-editing-quantity');
+
+      const quantityInput = document.querySelector(`.js-quantity-input-${productId}`);
+      const newQuantity = Number(quantityInput.value);
+
+      updateQuantity(productId, newQuantity);
+      renderCheckoutItem();
+    });
+  });
+
+export function renderCheckoutItem() {
+  let cartQuantity = calculateCartQuantity();
+
+  //2. Select the HTML element and update it
+  const checkoutHeaderSpan = document.querySelector('.js-return-to-home-link');
+
+  if (checkoutHeaderSpan) checkoutHeaderSpan.innerHTML = `${cartQuantity} items`;
+}
+
