@@ -4,6 +4,7 @@ import formatCurrency from '../utils/money.js';
 import { hello } from 'https://unpkg.com/supersimpledev@1.0.1/hello.esm.js';
 import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js';
 import { deliveryOptions, getDeliveryOption } from '../../data/deliveryOptions.js';
+import { renderPaymentSummary } from './paymentSummary.js';
 
 export function renderOrderSummary() {
     let cartSummaryHTML = '';
@@ -40,7 +41,7 @@ export function renderOrderSummary() {
                 </div>
                 <div class="product-quantity">
                     <span>
-                    Quantity: <span class="quantity-label">${cartItem.quantity}</span>
+                    Quantity: <span class="quantity-label js-quantity-label js-quantity-label-${matchingProduct.id}" data-product-id="${matchingProduct.id}">${cartItem.quantity}</span>
                     </span>
                     <span class="update-quantity-link link-primary js-update-link"
                     data-product-id="${matchingProduct.id}">
@@ -118,6 +119,7 @@ export function renderOrderSummary() {
                 const { productId, deliveryOptionId } = element.dataset;
                 updateDeliveryOption(productId, deliveryOptionId);
                 renderOrderSummary();
+                renderPaymentSummary();
             });
         });
 
@@ -130,6 +132,7 @@ export function renderOrderSummary() {
                 container.remove();
 
                 renderCheckoutItem();
+                renderPaymentSummary();
             });
         });
 
@@ -161,6 +164,8 @@ export function renderOrderSummary() {
 
                 updateQuantity(productId, newQuantity);
                 renderCheckoutItem();
+                renderOrderSummary();
+                renderPaymentSummary();
             });
         });
 
@@ -182,7 +187,9 @@ export function renderOrderSummary() {
                     }
 
                     updateQuantity(productId, newQuantity);
-                    renderCheckoutItem();
+                    renderCheckoutItem(); // Cần phải có nhãn trước vì js-quantity-label trước đó mới chỉ ở dạng chuỗi chưa có class nằm trên page
+                    renderPaymentSummary();
+                    renderOrderSummary();
                 }
             });
         })
@@ -195,4 +202,5 @@ export function renderCheckoutItem() {
     const checkoutHeaderSpan = document.querySelector('.js-return-to-home-link');
 
     if (checkoutHeaderSpan) checkoutHeaderSpan.innerHTML = `${cartQuantity} items`;
+
 }
