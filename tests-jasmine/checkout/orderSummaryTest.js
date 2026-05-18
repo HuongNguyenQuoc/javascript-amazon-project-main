@@ -11,7 +11,6 @@ describe('test suite: renderOrderSummary', () => {
             done();
         });
     });
-    //20:30:00
 
     beforeEach(() => {
         spyOn(localStorage, 'setItem');
