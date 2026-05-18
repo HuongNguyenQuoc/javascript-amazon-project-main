@@ -37,7 +37,7 @@ export class Clothing extends Product {
   }
 
   extraInfoHTML() {
-    return `<a href="${this.sizeChartLink}" target="_blank">Size chart</a>` 
+    return `<a href="${this.sizeChartLink}" target="_blank">Size chart</a>`
   }
 }
 
@@ -769,8 +769,6 @@ export function loadProductsFetch() {
       }
       return new Product(productDetails);
     });
-    
-    console.log('load products');
   }).catch((error) => {
     console.log('Unexpected error. Please try again later.');
   });
@@ -780,12 +778,12 @@ export function loadProductsFetch() {
 
 loadProductsFetch();
 
+/*
 export function loadProducts(fun) {
   const xhr = new XMLHttpRequest();
 
   xhr.addEventListener('load', () => {
     products = JSON.parse(xhr.response).map((productDetails) => {
-      
     });
     fun();
   });
@@ -797,3 +795,4 @@ export function loadProducts(fun) {
   xhr.open('GET', 'https://supersimplebackend.dev/products');
   xhr.send();
 }
+*/
