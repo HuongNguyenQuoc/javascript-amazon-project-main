@@ -33,11 +33,11 @@ export class Clothing extends Product {
 
   constructor(productDetails) {
     super(productDetails);
-    this.sizeChartLink =productDetails.sizeChartLink;
+    this.sizeChartLink = productDetails.sizeChartLink;
   }
 
   extraInfoHTML() {
-    return `<a href="${this.sizeChartLink}" target="_blank">Size chart</a>`
+    return `<a href="${this.sizeChartLink}" target="_blank">Size chart</a>` 
   }
 }
 
@@ -755,17 +755,35 @@ export const products = [
 
 export let products = [];
 
-export function loadProducts(fun) {
-  const xhr = new XMLHttpRequest();
-
-  xhr.addEventListener('load', () => {
-    products = JSON.parse(xhr.response).map((productDetails) => {
+export function loadProductsFetch() {
+  const promise = fetch(
+    'https://supersimplebackend.dev/products'
+  ).then((response) => {
+    return response.json();
+  }).then((productsData) => {
+    products = productsData.map((productDetails) => {
       if (productDetails.type === 'clothing') {
         return new Clothing(productDetails);
       } else if (productDetails.type === 'appliance') {
         return new Appliance(productDetails);
       }
       return new Product(productDetails);
+    });
+    
+    console.log('load products');
+  });
+
+  return promise;
+}
+
+loadProductsFetch();
+
+export function loadProducts(fun) {
+  const xhr = new XMLHttpRequest();
+
+  xhr.addEventListener('load', () => {
+    products = JSON.parse(xhr.response).map((productDetails) => {
+      
     });
     fun();
   });
