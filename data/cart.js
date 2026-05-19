@@ -44,6 +44,32 @@ export function removeFromCart(productId) {
   cart = cart.filter((cartItem) => cartItem.productId !== productId);
   saveToStorage();
 }
+export let products = [];
+
+export function loadProducts(onProductsLoad) {
+  const promise = fetch(
+    'https://supersimplebackend.dev/products'
+  ).then((response) => {
+    return response.json();
+  }).then((productsData) => {
+    products = productsData.map((productDetails) => {
+      if (productDetails.type === 'clothing') {
+        return new Clothing(productDetails);
+      } else if (productDetails.type === 'appliance') {
+        return new Appliance(productDetails);
+      }
+      return new Product(productDetails);
+    });
+    if (onProductsLoad) {
+      onProductsLoad();
+    }
+  }).catch((error) => {
+    console.log('Unexpected error. Please try again later.');
+  });
+
+  return promise;
+}
+
 
 export function calculateCartQuantity() {
   let cartQuantity = 0;
@@ -91,6 +117,13 @@ export function loadCart(fun) {
 
   xhr.open('GET', 'https://supersimplebackend.dev/products');
   xhr.send();
+}
+
+export async function loadCartFetch() {
+  const response = await fetch('https://supersimplebackend.dev/cart');
+  const text = await response.text();
+  console.log(text);
+  return text;
 }
 
 

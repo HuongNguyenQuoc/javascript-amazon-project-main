@@ -2,7 +2,9 @@ import { cart, addToCart, calculateCartQuantity, saveToStorage } from '../data/c
 import { products, loadProducts } from '../data/products.js';
 import { formatCurrency } from './utils/money.js';
 
-loadProducts(renderProductsGrid);
+loadProducts().then(() => {
+  renderProductsGrid();
+});
 
 function renderProductsGrid() {
   let productsHTML = '';
